@@ -58,6 +58,7 @@ const rule: Rule = {
                 context.addIssue({
                     code: this.code,
                     severity: 'warning',
+                    value: value,
                     message: `Unexpected character '${char}' (${charName}) in a ${dominantName} text`,
                     suggestion: `Consider removing or replacing the ${charName} character`,
                 });

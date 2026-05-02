@@ -1,3 +1,4 @@
+import { LocalePunctuationRegistry, LocalizedPunctuationSet ,enPunctuationSet, localePunctuationRegistry} from '@/core/character/punctuation';
 import fs from 'node:fs/promises'
 import { relative, extname } from 'node:path'
 
@@ -12,6 +13,7 @@ export interface LocaleDocument {
     relativePath: string;
     text: string;
     messages: Record<string, any>;
+    punctuation: LocalizedPunctuationSet;
 }
 
 export interface JsonLocaleDocument extends LocaleDocument {
@@ -42,10 +44,11 @@ interface ResolveLocaleDocumentOptions {
     path: string
     cwd?: string
     locale?: string;
+    punctuationRegistry?: LocalePunctuationRegistry;
 }
 
 export async function resolveLocaleDocument(options: ResolveLocaleDocumentOptions): Promise<LocaleDocument | null> {
-
+    const punctuationRegistry = options.punctuationRegistry || localePunctuationRegistry
     const ext = extname(options.path);
     if (ext !== '.json') {
         throw new Error(`Invalid locale file: ${options.path}, cause not json file`);
@@ -71,5 +74,6 @@ export async function resolveLocaleDocument(options: ResolveLocaleDocumentOption
         relativePath: relativePath,
         text: content,
         messages: json,
+        punctuation: punctuationRegistry.getPunctuationSet(locale) || enPunctuationSet,
     }
 }

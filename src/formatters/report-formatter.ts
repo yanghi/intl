@@ -22,11 +22,38 @@ export class LintReportFormatter {
       for (const issue of fileIssues) {
         const icon = this.severityIcons[issue.severity] || '○';
         const location = issue.key ? ` at ${issue.key}` : '';
-        output += `   ${icon} ${issue.code}: ${issue.message}${location}\n`;
+        const prefix = `   ${icon} ${issue.code}: `;
+        output += `${prefix}${issue.message}${location}\n`;
+
+        if (issue.messageWavyLine) {
+          const { start, end } = issue.messageWavyLine;
+          const waveLen = Math.max(0, end - start);
+          if (waveLen > 0) {
+            const leadingSpaces = prefix.length + start;
+            output += `${' '.repeat(leadingSpaces)}${'~'.repeat(waveLen)}\n`;
+          }
+        }
       }
     }
 
     return output.trim();
+  }
+  logIssues(issues: LintIssue[]): void {
+    const issuesByFile = this.groupIssuesByFile(issues);
+    for (const [filePath, fileIssues] of issuesByFile) {
+      console.log(`${filePath}:`);
+      for (const issue of fileIssues) {
+        console.log(`  ${issue.code}: ${issue.message}`);
+        if (issue.messageWavyLine) {
+          const { start, end } = issue.messageWavyLine;
+          const waveLen = Math.max(0, end - start);
+          if (waveLen > 0) {
+            console.log(`    ${' '.repeat(start)}${'~'.repeat(waveLen)}`);
+          }
+        }
+      }
+      console.log('');
+    }
   }
 
   private groupIssuesByFile(issues: LintIssue[]): Map<string, LintIssue[]> {
