@@ -1,0 +1,1 @@
+Object.defineProperty(exports,Symbol.toStringTag,{value:`Module`});async function e(e,t){return e.collect(t)}async function t(e,t){return e.fix(t)}async function n(e,t){return e.lint(t)}async function r(e,t){return e.translate(t)}function i(i){return{lint:n,collect:e,translate:r,fix:t}}exports.createCliCommandRegistry=i;
