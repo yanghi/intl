@@ -1,23 +1,13 @@
-import type { IntlEngineContract } from '../core/engine/intl-engine-contract';
-import { runCollectCommand } from '../commands/collect';
-import { runFixCommand } from '../commands/fix';
-import { runLintCommand } from '../commands/lint';
-import { runTranslateCommand } from '../commands/translate';
+#!/usr/bin/env node
 
-export interface CliCommandRegistry {
-  lint: typeof runLintCommand;
-  collect: typeof runCollectCommand;
-  translate: typeof runTranslateCommand;
-  fix: typeof runFixCommand;
-}
+import { program } from 'commander';
+import { runCollectCommand } from '@/commands/collect';
+program
+  .command('collect')
+  .option('-c', 'configure file paths')
+  .description('Collect all keys from code files')
+  .action(async (options) => {
+    await runCollectCommand(options);
+  });
 
-export function createCliCommandRegistry(
-  _engine: IntlEngineContract,
-): CliCommandRegistry {
-  return {
-    lint: runLintCommand,
-    collect: runCollectCommand,
-    translate: runTranslateCommand,
-    fix: runFixCommand,
-  };
-}
+program.parse(process.argv);

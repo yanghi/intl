@@ -1,12 +1,7 @@
-import type { ExecutionContext } from '../core/context/execution-context';
-import type {
-  CollectResult,
-  IntlEngineContract,
-} from '../core/engine/intl-engine-contract';
+import { collect } from "@/features/collect/collect";
 
 export async function runCollectCommand(
-  engine: IntlEngineContract,
-  context: ExecutionContext,
-): Promise<CollectResult> {
-  return engine.collect(context);
+  options,
+): Promise<void> {
+  await collect(options);
 }
