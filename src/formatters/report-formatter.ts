@@ -25,7 +25,15 @@ export class LintReportFormatter {
         const prefix = `   ${icon} ${issue.code}: `;
         output += `${prefix}${issue.message}${location}\n`;
 
-        if (issue.messageWavyLine) {
+        if (issue.wavyLine !== undefined && issue.value !== undefined) {
+          const { start, end } = issue.wavyLine;
+          const waveLen = Math.max(0, end - start);
+          const pad = ' '.repeat(prefix.length);
+          output += `${pad}${issue.value}\n`;
+          if (waveLen > 0) {
+            output += `${pad}${' '.repeat(start)}${'~'.repeat(waveLen)}\n`;
+          }
+        } else if (issue.messageWavyLine) {
           const { start, end } = issue.messageWavyLine;
           const waveLen = Math.max(0, end - start);
           if (waveLen > 0) {
@@ -43,12 +51,22 @@ export class LintReportFormatter {
     for (const [filePath, fileIssues] of issuesByFile) {
       console.log(`${filePath}:`);
       for (const issue of fileIssues) {
-        console.log(`  ${issue.code}: ${issue.message}`);
-        if (issue.messageWavyLine) {
+        const issuePrefix = `  ${issue.code}: `;
+        console.log(`${issuePrefix}${issue.message}`);
+        if (issue.wavyLine !== undefined && issue.value !== undefined) {
+          const { start, end } = issue.wavyLine;
+          const waveLen = Math.max(0, end - start);
+          const pad = ' '.repeat(issuePrefix.length);
+          console.log(`${pad}${issue.value}`);
+          if (waveLen > 0) {
+            console.log(`${pad}${' '.repeat(start)}${'~'.repeat(waveLen)}`);
+          }
+        } else if (issue.messageWavyLine) {
           const { start, end } = issue.messageWavyLine;
           const waveLen = Math.max(0, end - start);
           if (waveLen > 0) {
-            console.log(`    ${' '.repeat(start)}${'~'.repeat(waveLen)}`);
+            const pad = ' '.repeat(issuePrefix.length);
+            console.log(`${pad}${' '.repeat(start)}${'~'.repeat(waveLen)}`);
           }
         }
       }

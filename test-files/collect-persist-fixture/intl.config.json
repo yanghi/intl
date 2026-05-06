@@ -1,0 +1,15 @@
+{
+  "root": ".",
+  "locales": ["zh"],
+  "referenceLocale": "zh",
+  "localeFiles": ["src/locales/**/*.json"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"],
+  "i18n": {
+    "t": ["t"],
+    "placeholderPattern": "{}"
+  },
+  "collect": {
+    "mergeStrategy": "incremental"
+  }
+}

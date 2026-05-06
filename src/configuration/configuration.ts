@@ -1,18 +1,35 @@
+import type { LocaleMergeStrategy } from '@/core/document/locale/message-merger'
+
 export interface NormalizeConfiguration {
     rawConfiguration: IntlConfiguration
     root: string
+    rootDirPath: string
     include: string[]
     exclude: string[]
     locales: string[]
     referenceLocale: string
     localeFiles: string[]
     i18n: IntlI18nConfiguration
+    collect: IntlCollectConfiguration
 }
 
 export interface IntlTranslateConfiguration {
     provider?: string
 }
 
+export interface IntlCollectConfiguration {
+    lint?: boolean
+    /**
+     * reference locel的 message 会将referenceLocale的key作为value
+     */
+    referenceLocaleKeyAsValue?: boolean
+    /**
+     * How collected keys are merged into existing locale JSON.
+     * - `incremental`: keep existing non-empty translations; only fill empty slots.
+     * - `overwrite`: non-empty collected values replace existing entries.
+     */
+    mergeStrategy?: LocaleMergeStrategy
+}
 
 export interface IntlI18nConfiguration {
     /**
@@ -63,4 +80,5 @@ export interface IntlConfiguration {
 
     rules?: Record<string, RawIntlRuleConfiguration>
     i18n?: Partial<IntlI18nConfiguration>
+    collect?: Partial<IntlCollectConfiguration>
 }

@@ -51,6 +51,29 @@ describe('LintReportFormatter', () => {
     );
   });
 
+  it('draws wavy line under issue.value when wavyLine is set (indices are value-only)', async () => {
+    const prefix = '   ✖ x: ';
+    const pad = ' '.repeat(prefix.length);
+    const issues = [
+      baseIssue({
+        filePath: 'a.json',
+        code: 'x',
+        message: 'mixed punctuation',
+        value: 'Hello。',
+        wavyLine: { start: 5, end: 6 },
+      }),
+    ];
+    const result = await formatter.format(issues);
+    expect(result).toBe(
+      [
+        'a.json',
+        `${prefix}mixed punctuation at some.key`,
+        `${pad}Hello。`,
+        `${pad}     ~`,
+      ].join('\n'),
+    );
+  });
+
   it('does not shift the wavy line when appending at key (indices are message-only)', async () => {
     const message = 'abcdef';
     const shortKeyIssue = baseIssue({
@@ -129,7 +152,7 @@ describe('LintReportFormatter.logIssues', () => {
     ]);
   });
 
-  it('logs message wave row with indent based on issue.message indices only', () => {
+  it('logs message wave row aligned under issue.message (after code prefix)', () => {
     const lines = captureConsoleLogs(() =>
       formatter.logIssues([
         baseIssue({
@@ -140,7 +163,8 @@ describe('LintReportFormatter.logIssues', () => {
         }),
       ]),
     );
-    const waveLine = `    ${' '.repeat(6)}~~~~~`;
+    // `  x: ` length 5; underline starts at index 6 inside message
+    const waveLine = `${' '.repeat(5 + 6)}~~~~~`;
     expect(lines).toHaveLoggedLine(waveLine);
     expect(lines).toBeLogged(['a.json:', '  x: hello world', waveLine, '']);
   });

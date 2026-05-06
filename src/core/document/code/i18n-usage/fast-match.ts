@@ -309,9 +309,24 @@ function findMatchingCloseParen(code: string, openParenIndex: number): number {
     return -1;
 }
 
+/**
+ * Callee names must match whole identifiers, not a suffix (e.g. `import(` must not match as `t(`).
+ * - Dotted names (`this.t`) and `$`-prefixed names are matched as literal fragments.
+ * - Simple identifiers use a leading word boundary so `import(` does not match bare `t`.
+ */
 function buildCalleePattern(names: string[]): RegExp {
     const sorted = [...names].sort((a, b) => b.length - a.length);
-    const body = sorted.map(escapeRegex).join("|");
+    const body = sorted
+        .map((name) => {
+            if (name.includes(".")) {
+                return escapeRegex(name);
+            }
+            if (name.startsWith("$")) {
+                return escapeRegex(name);
+            }
+            return `\\b${escapeRegex(name)}`;
+        })
+        .join("|");
     return new RegExp(`(?:${body})\\s*\\(`, "g");
 }
 

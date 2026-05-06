@@ -1,0 +1,12 @@
+{
+    "root": ".",
+    "locales": ["zh"],
+    "referenceLocale": "zh",
+    "localeFiles": ["src/locales/**/*.json"],
+    "include": ["src/**/*.{js,ts,jsx,tsx,vue}"],
+    "exclude": ["node_modules", "dist", "build", "coverage", "logs", "temp", "cache", "test", "output"],
+    "i18n": {
+        "t": ["t", "$t", "this.t"],
+        "placeholderPattern": "{}"
+    }
+}

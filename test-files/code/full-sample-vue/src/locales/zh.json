@@ -1,0 +1,7 @@
+{
+    "test": "测试   ",
+    "test2": "测试2",
+    "mixed punctuation": "中文混入英文标点",
+    "mixed punctuation2": "中文混入,英文标点.",
+    "no space between cjk and latin": "中英文混用Hello世界!"
+}

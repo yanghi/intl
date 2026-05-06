@@ -97,10 +97,29 @@ const ZH_PUNCTUATION_SET: Record<Punctuation, string> = {
 
 export const enPunctuationSet = defineLocalizedPunctuationSet('en', EN_PUNCTUATION_SET)
 export const zhPunctuationSet = defineLocalizedPunctuationSet('zh', ZH_PUNCTUATION_SET)
+
+/** Escape for use inside a RegExp character class ` [...] `. */
+function escapeRegexCharacterClass(char: string): string {
+    switch (char) {
+        case '\\':
+            return '\\\\';
+        case ']':
+            return '\\]';
+        case '^':
+            return '\\^';
+        case '-':
+            return '\\-';
+            
+        default:
+            return char;
+    }
+}
+
 export function defineLocalizedPunctuationSet(locale: string, punctuationSet: Record<Punctuation, string>): LocalizedPunctuationSet {
 
     const characters = Object.values(punctuationSet).join('')
-    const charactersRegex = new RegExp(`[${characters}]`, 'g')
+    const escapedForClass = [...characters].map(escapeRegexCharacterClass).join('')
+    const charactersRegex = new RegExp(`[${escapedForClass}]`, 'g')
     return {
         characters,
         charactersRegex,

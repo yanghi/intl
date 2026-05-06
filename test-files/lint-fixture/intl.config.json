@@ -1,0 +1,8 @@
+{
+  "root": ".",
+  "locales": ["en", "zh"],
+  "referenceLocale": "en",
+  "localeFiles": ["src/locales/**/*.json"],
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
